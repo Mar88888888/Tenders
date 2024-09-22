@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Tender Detail</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      padding: 20px 0;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #555;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .status {
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
+      background-color: #e7e7e7;
+    }
+
+    .active {
+      color: #fff;
+      background-color: #28a745;
+    
+    }
+
+    .inactive {
+      color: #fff;
+      background-color: #dc3545;
+    }
+
+    button.toggle-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button.toggle-btn.activate-btn {
+        background-color: #28a745; 
+        color: white;       
+    }
+
+    button.toggle-btn.activate-btn:hover {
+        background-color: #218838;
+    }
+
+    button.toggle-btn.deactivate-btn {
+        background-color: #dc3545;
+        color: white;          
+    }
+
+    button.toggle-btn.deactivate-btn:hover {
+        background-color: #c82333;
+    }
+
+  </style>
+</head>
+
+<body>
+  <h1>Tender Detail</h1>
+  <div class="container">
+    <h2 th:text="${tender.title}">Tender Title</h2>
+    <p th:text="${tender.description}">Tender Description</p>
+    <p class="status" th:classappend="${tender.isActive ? 'active' : 'inactive'}"
+      th:text="${tender.isActive ? 'Active' : 'Inactive'}">Tender Status</p>
+    <form th:action="@{'/tenders/' + ${tender.id} + '/toggleActive'}" method="post">
+      <button type="submit" class="toggle-btn" th:classappend="${tender.isActive ? 'deactivate-btn' : 'activate-btn'}"
+        th:text="${tender.isActive ? 'Deactivate' : 'Activate'}">
+      </button>
+    </form>
+  </div>
+</body>
+
+</html>
