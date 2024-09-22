@@ -3,12 +3,13 @@
 
 <head>
   <title>Add Tender</title>
-  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/addTender.css">
+  <link rel="stylesheet" type="text/css" href="/navbar.css">
 </head>
 
 <body>
-  <div th:insert="~{fragments :: headerFragment}">
-  </div>
+  <div th:insert="~{fragments :: headerFragment}"></div>
   <div class="container">
     <h1>Add Tender</h1>
     <form th:action="@{/tenders}" th:object="${tender}" method="post">
@@ -16,7 +17,8 @@
       <input type="text" id="title" th:field="*{title}" placeholder="Enter tender title" required />
 
       <label for="description">Description</label>
-      <input type="text" id="description" th:field="*{description}" placeholder="Enter description" required />
+      <!-- Replacing input with textarea -->
+      <textarea id="description" th:field="*{description}" placeholder="Enter description" required></textarea>
 
       <input type="submit" value="Submit" />
     </form>

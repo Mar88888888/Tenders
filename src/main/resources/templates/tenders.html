@@ -3,20 +3,28 @@
 
 <head>
   <title>Tenders</title>
-  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/tenders.css">
+  <link rel="stylesheet" type="text/css" href="/navbar.css">
 
 </head>
-
 <body>
   <div th:insert="~{fragments :: headerFragment}">
   </div>
-  <h1>Active Tenders</h1>
-  <div class="container">
+
+  <!-- Title for the page -->
+  <div class="tenders-container">
+    <h2>Active Tenders</h2>
+
     <a href="/tenders/add" class="add-tender">Create Tender</a>
-    <ul>
-      <li th:each="tender : ${tenders}">
-        <span th:text="${tender.title}">Tender Title</span>
-          <a th:href="@{/tenders/{id}(id=${tender.id})}" target="_blank">View Details</a>
+
+    <!-- List of tenders -->
+    <ul class="tenders-list">
+      <li th:each="tender : ${tenders}" class="tender-item">
+        <span class="tender-item-title" th:text="${tender.title}">Tender Title</span>
+        <div class="tender-item-details">
+        </div>
+        <a th:href="@{/tenders/{id}(id=${tender.id})}" target="_blank" class="view-details">View Details</a>
       </li>
     </ul>
   </div>

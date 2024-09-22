@@ -3,7 +3,9 @@
 
 <head>
   <title>Tender Detail</title>
-  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/tenderDetails.css">
+  <link rel="stylesheet" type="text/css" href="/navbar.css">
 
 </head>
 
@@ -11,11 +13,9 @@
   <div th:insert="~{fragments :: headerFragment}">
   </div>
   <h1>Tender Detail</h1>
-  <div class="container">
+  <div class="container" th:classappend="${tender.isActive ? 'active' : 'inactive'}">
     <h2 th:text="${tender.title}">Tender Title</h2>
     <p th:text="${tender.description}">Tender Description</p>
-    <p class="status" th:classappend="${tender.isActive ? 'active' : 'inactive'}"
-      th:text="${tender.isActive ? 'Active' : 'Inactive'}">Tender Status</p>
     <form th:action="@{'/tenders/' + ${tender.id} + '/toggleActive'}" method="post">
       <button type="submit" class="toggle-btn" th:classappend="${tender.isActive ? 'deactivate-btn' : 'activate-btn'}"
         th:text="${tender.isActive ? 'Deactivate' : 'Activate'}">
