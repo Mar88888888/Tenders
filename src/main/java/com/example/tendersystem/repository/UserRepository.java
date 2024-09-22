@@ -10,22 +10,28 @@ import java.util.Optional;
 @Repository
 public class UserRepository {
 
-  private final List<User> users = new ArrayList<>();
+  private List<User> users = new ArrayList<>();
+
+  public UserRepository() {
+    users.add(new User(1L, "user1", "password1"));
+    users.add(new User(1L, "user2", "password2"));
+  }
 
   public List<User> findAll() {
-    return new ArrayList<>(users);
+    return users;
   }
 
   public Optional<User> findById(Long id) {
     return users.stream().filter(user -> user.getId().equals(id)).findFirst();
   }
 
-  public Optional<User> findByUsername(String username) {
-    return users.stream().filter(user -> user.getUsername().equals(username)).findFirst();
+  public Optional<User> findByUsername(String name) {
+    return users.stream().filter(user -> user.getUsername().equals(name)).findFirst();
   }
 
-  public void save(User user) {
+  public User save(User user) {
     users.add(user);
+    return user;
   }
 
   public void deleteById(Long id) {
