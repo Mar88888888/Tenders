@@ -2,6 +2,10 @@ package com.example.tendersystem.service;
 
 import com.example.tendersystem.model.User;
 import com.example.tendersystem.repository.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +16,22 @@ public class UserService {
 
   private final UserRepository userRepository;
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   public UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
+  }
+
+  public boolean login(String username, String rawPassword) {
+    User user = findByUsername(username)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+    if (passwordEncoder.matches(rawPassword, user.getPassword())) {
+      return true;
+    } else {
+      throw new IllegalArgumentException("Invalid username or password");
+    }
   }
 
   public List<User> getAllUsers() {
@@ -35,6 +53,7 @@ public class UserService {
         .orElse(0L) + 1;
 
     user.setId(newId);
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     return userRepository.save(user);
   }
 

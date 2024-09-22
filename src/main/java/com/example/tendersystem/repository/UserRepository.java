@@ -13,8 +13,6 @@ public class UserRepository {
   private List<User> users = new ArrayList<>();
 
   public UserRepository() {
-    users.add(new User(1L, "user1", "password1"));
-    users.add(new User(1L, "user2", "password2"));
   }
 
   public List<User> findAll() {

@@ -1,14 +1,12 @@
 package com.example.tendersystem.config;
 
+import com.example.tendersystem.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import com.example.tendersystem.service.UserService;
 
 @Configuration
 public class SecurityConfig {
@@ -23,23 +21,20 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/user/login", "/user/signup",
-                "/style.css")
-            .permitAll()
+            .requestMatchers("/user/login", "/user/signup", "/style.css", "/fragments.html").permitAll()
             .anyRequest().authenticated())
         .formLogin(form -> form
             .loginPage("/user/login")
-            .defaultSuccessUrl("/", true)
+            .defaultSuccessUrl("/tenders/active", true)
             .permitAll())
         .logout(logout -> logout
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/user/login?logout")
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID")
             .permitAll());
-
     return http.build();
-  }
-
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
   }
 
   @Bean
@@ -55,5 +50,4 @@ public class SecurityConfig {
             .build())
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
-
 }

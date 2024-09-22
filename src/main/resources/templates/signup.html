@@ -3,11 +3,13 @@
 
 <head>
   <title>Signup</title>
-  <link th:href="@{/style}" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 
 <body>
-  <div class="form-container">
+  <div th:insert="~{fragments :: headerFragment}">
+  </div>
+    <div class="form-container">
     <h2>Sign Up</h2>
     <form th:action="@{/user/signup}" method="post">
       <div>

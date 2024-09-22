@@ -1,6 +1,5 @@
 package com.example.tendersystem.controller;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +29,14 @@ public class UserController {
   public String signupForm(Model model) {
     model.addAttribute("user", new User());
     return "signup";
+  }
+
+  @PostMapping("/login")
+  public String loginSubmit(@ModelAttribute User user, Model model) {
+    userService.createUser(user);
+
+    model.addAttribute("success", "User registered successfully!");
+    return "redirect:/login";
   }
 
   @PostMapping("/signup")

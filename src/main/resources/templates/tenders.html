@@ -3,84 +3,13 @@
 
 <head>
   <title>Tenders</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 0;
-    }
+  <link rel="stylesheet" type="text/css" href="/style.css">
 
-    h1 {
-      text-align: center;
-      color: #333;
-      padding: 20px 0;
-      margin-bottom: 20px;
-    }
-
-    .container {
-      width: 80%;
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    li {
-      background-color: #e7e7e7;
-      margin: 10px 0;
-      padding: 15px;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    li span {
-      font-weight: bold;
-      color: #555;
-    }
-
-    a {
-      text-decoration: none;
-      color: #0066cc;
-      background-color: #fff;
-      padding: 8px 12px;
-      border: 1px solid #0066cc;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    a:hover {
-      background-color: #0066cc;
-      color: #fff;
-    }
-
-    .add-tender {
-      display: block;
-      width: 150px;
-      text-align: center;
-      background-color: #28a745;
-      color: #fff;
-      padding: 10px;
-      margin: 20px auto;
-      border-radius: 5px;
-      text-decoration: none;
-      transition: background-color 0.3s ease;
-    }
-
-    .add-tender:hover {
-      background-color: #218838;
-    }
-  </style>
 </head>
 
 <body>
+  <div th:insert="~{fragments :: headerFragment}">
+  </div>
   <h1>Active Tenders</h1>
   <div class="container">
     <a href="/tenders/add" class="add-tender">Create Tender</a>
