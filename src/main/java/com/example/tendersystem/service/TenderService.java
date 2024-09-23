@@ -3,6 +3,7 @@ package com.example.tendersystem.service;
 import com.example.tendersystem.model.Tender;
 import com.example.tendersystem.repository.TenderRepository;
 import org.springframework.stereotype.Service;
+import com.example.tendersystem.utils.UserUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +12,13 @@ import java.util.Optional;
 public class TenderService {
 
   private final TenderRepository tenderRepository;
+  private final UserUtils userUtils;
 
-  public TenderService(TenderRepository tenderRepository) {
+  public TenderService(
+      TenderRepository tenderRepository,
+      UserUtils userUtils) {
     this.tenderRepository = tenderRepository;
+    this.userUtils = userUtils;
   }
 
   public List<Tender> getAllTenders() {
@@ -29,8 +34,9 @@ public class TenderService {
         .mapToLong(Tender::getId)
         .max()
         .orElse(0L) + 1;
-
+    tender.setOwner(userUtils.getCurrentUser());
     tender.setId(newId);
+
     return tenderRepository.save(tender);
   }
 
@@ -43,5 +49,11 @@ public class TenderService {
 
   public void deleteTender(Long id) {
     tenderRepository.deleteById(id);
+  }
+
+  public List<Tender> searchTenders(String keyword) {
+    String lowerKeyword = keyword.toLowerCase();
+
+    return tenderRepository.searchByKeyword(lowerKeyword);
   }
 }

@@ -21,7 +21,7 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/user/login", "/user/signup", "/*.css", "/fragments.html").permitAll()
+            .requestMatchers("/user/login", "/user/signup", "/*.css", "/error.html").permitAll()
             .anyRequest().authenticated())
         .formLogin(form -> form
             .loginPage("/user/login")
@@ -29,7 +29,7 @@ public class SecurityConfig {
             .permitAll())
         .logout(logout -> logout
             .logoutUrl("/logout")
-            .logoutSuccessUrl("/user/login?logout")
+            .logoutSuccessUrl("/user/login")
             .invalidateHttpSession(true)
             .clearAuthentication(true)
             .deleteCookies("JSESSIONID")

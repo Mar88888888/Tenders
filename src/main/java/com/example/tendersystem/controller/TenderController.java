@@ -50,7 +50,7 @@ public class TenderController {
     return "redirect:/tenders";
   }
 
-  @PostMapping("/{id}/toggleActive")
+  @PostMapping("/toggleActive/{id}")
   public String toggleActive(@PathVariable Long id) {
     tenderService.toggleActive(id);
     return "redirect:/tenders/" + String.valueOf(id);
@@ -60,5 +60,12 @@ public class TenderController {
   public String deleteTender(@PathVariable Long id) {
     tenderService.deleteTender(id);
     return "redirect:/tenders";
+  }
+
+  @GetMapping("/search")
+  public String searchTenders(Model model, @RequestParam String keyword) {
+    List<Tender> tenders = tenderService.searchTenders(keyword);
+    model.addAttribute("tenders", tenders);
+    return "tenders.html";
   }
 }

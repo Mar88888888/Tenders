@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.Arrays;
 
 @Repository
 public class TenderRepository {
@@ -20,14 +22,29 @@ public class TenderRepository {
   }
 
   public Tender save(Tender tender) {
-    findById(tender.getId()).ifPresent(existingTender -> {
-      tenders.remove(existingTender);
+    findById(tender.getId()).ifPresentOrElse(existingTender -> {
+      existingTender.setTitle(tender.getTitle());
+      existingTender.setDescription(tender.getDescription());
+      existingTender.setActive(tender.isActive());
+      existingTender.setOwner(tender.getOwner());
+      existingTender.setKeywords(tender.getKeywords());
+    }, () -> {
+      tenders.add(tender);
     });
-    tenders.add(tender);
+
     return tender;
   }
 
   public void deleteById(Long id) {
     tenders.removeIf(tender -> tender.getId().equals(id));
+  }
+
+  public List<Tender> searchByKeyword(String lowerKeyword) {
+    return tenders.stream()
+        .filter(tender -> tender.getTitle().toLowerCase().contains(lowerKeyword) ||
+            tender.getDescription().toLowerCase().contains(lowerKeyword) ||
+            Arrays.stream(tender.getKeywords())
+                .anyMatch(k -> k.toLowerCase().contains(lowerKeyword)))
+        .collect(Collectors.toList());
   }
 }

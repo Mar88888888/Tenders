@@ -6,16 +6,18 @@ public class Tender {
   private String description;
   private boolean isActive;
   private User owner;
+  private String[] keywords;
 
   public Tender() {
   }
 
-  public Tender(Long id, String title, String description, boolean isActive, User owner) {
+  public Tender(Long id, String title, String description, boolean isActive, User owner, String[] keywords) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.isActive = isActive;
     this.owner = owner;
+    this.keywords = keywords;
   }
 
   public Long getId() {
@@ -56,5 +58,13 @@ public class Tender {
 
   public void setOwner(User owner) {
     this.owner = owner;
+  }
+
+  public String[] getKeywords() {
+    return keywords;
+  }
+
+  public void setKeywords(String[] keywords) {
+    this.keywords = keywords;
   }
 }

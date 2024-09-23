@@ -46,4 +46,9 @@ public class UserController {
     model.addAttribute("success", "User registered successfully!");
     return "redirect:/login";
   }
+
+  @GetMapping("/logout")
+  public String logout() {
+    return "redirect:/user/login";
+  }
 }

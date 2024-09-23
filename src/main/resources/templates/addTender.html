@@ -17,8 +17,10 @@
       <input type="text" id="title" th:field="*{title}" placeholder="Enter tender title" required />
 
       <label for="description">Description</label>
-      <!-- Replacing input with textarea -->
       <textarea id="description" th:field="*{description}" placeholder="Enter description" required></textarea>
+
+      <label for="keywords">Keywords</label>
+      <textarea id="keywords" th:field="*{keywords}" placeholder="Enter keywords, separated by commas" rows="4"></textarea>
 
       <input type="submit" value="Submit" />
     </form>

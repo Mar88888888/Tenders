@@ -1,8 +1,15 @@
 <header th:fragment="headerFragment">
   <nav>
     <ul>
+      <li>
+        <li><a href="/user/logout">Log Out</a></li>
+      </li>
       <li><a href="/tenders">Home</a></li>
       <li><a href="/tenders/active">Active</a></li>
     </ul>
+    <form action="/tenders/search" method="get">
+      <input type="text" name="keyword" placeholder="Search tenders..." required />
+      <button type="submit">Search</button>
+    </form>
   </nav>
 </header>
