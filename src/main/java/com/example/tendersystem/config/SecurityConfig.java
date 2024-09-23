@@ -33,7 +33,10 @@ public class SecurityConfig {
             .invalidateHttpSession(true)
             .clearAuthentication(true)
             .deleteCookies("JSESSIONID")
-            .permitAll());
+            .permitAll())
+        .csrf(csrf -> csrf
+            .csrfTokenRepository(org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse()));
+
     return http.build();
   }
 

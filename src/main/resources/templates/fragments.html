@@ -2,7 +2,10 @@
   <nav>
     <ul>
       <li>
-        <li><a href="/user/logout">Log Out</a></li>
+        <form action="/logout" method="post" style="display:inline;">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <button type="submit">Log Out</button>
+        </form>
       </li>
       <li><a href="/tenders">Home</a></li>
       <li><a href="/tenders/active">Active</a></li>

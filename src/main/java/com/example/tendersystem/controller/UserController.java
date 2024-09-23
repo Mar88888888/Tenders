@@ -35,7 +35,7 @@ public class UserController {
   public String loginSubmit(@ModelAttribute User user, Model model) {
     userService.createUser(user);
 
-    model.addAttribute("success", "User registered successfully!");
+    model.addAttribute("success", "User logged in successfully!");
     return "redirect:/login";
   }
 
@@ -47,8 +47,4 @@ public class UserController {
     return "redirect:/login";
   }
 
-  @GetMapping("/logout")
-  public String logout() {
-    return "redirect:/user/login";
-  }
 }
