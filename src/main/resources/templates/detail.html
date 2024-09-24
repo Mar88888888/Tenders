@@ -24,6 +24,7 @@
     </p>
 
     <div class="button-group">
+      <button class="copy-link-btn" th:attr="onclick='copyLink(' + ${tender.id} + ')'">Copy Link</button>
       <form th:action="@{'/tenders' + '/toggleActive/' + ${tender.id}}" method="post">
         <button type="submit" class="toggle-btn" th:classappend="${tender.isActive ? 'deactivate-btn' : 'activate-btn'}"
           th:text="${tender.isActive ? 'Deactivate' : 'Activate'}">
@@ -37,6 +38,18 @@
       </form>
     </div>
   </div>
+
+  <script>
+    function copyLink(tenderId) {
+      const appUrl = '[[${appUrl}]]';
+      const link = `${appUrl}/tenders/${tenderId}`;
+      navigator.clipboard.writeText(link).then(() => {
+        alert("Link copied to clipboard!");
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+  </script>
 </body>
 
 </html>

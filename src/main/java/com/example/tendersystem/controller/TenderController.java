@@ -2,6 +2,8 @@ package com.example.tendersystem.controller;
 
 import com.example.tendersystem.model.Tender;
 import com.example.tendersystem.service.TenderService;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,9 @@ import java.util.List;
 @Controller
 @RequestMapping("/tenders")
 public class TenderController {
+
+  @Value("${app.url}")
+  private String appUrl;
 
   private final TenderService tenderService;
 
@@ -41,6 +46,7 @@ public class TenderController {
   @GetMapping("/{id}")
   public String getTenderById(@PathVariable Long id, Model model) {
     tenderService.getTenderById(id).ifPresent(tender -> model.addAttribute("tender", tender));
+    model.addAttribute("appUrl", appUrl);
     return "detail.html";
   }
 
