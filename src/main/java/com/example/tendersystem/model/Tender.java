@@ -1,5 +1,7 @@
 package com.example.tendersystem.model;
 
+import java.util.Date;
+
 public class Tender {
   private Long id;
   private String title;
@@ -7,6 +9,9 @@ public class Tender {
   private boolean isActive;
   private User owner;
   private String[] keywords;
+  private Date createdDate;
+
+  private Double expectedValue;
 
   public Tender() {
   }
@@ -66,5 +71,21 @@ public class Tender {
 
   public void setKeywords(String[] keywords) {
     this.keywords = keywords;
+  }
+
+  public Double getExpectedValue() {
+    return expectedValue;
+  }
+
+  public void setExpectedValue(Double expectedValue) {
+    this.expectedValue = expectedValue;
+  }
+
+  public Date getCreatedDate() {
+    return createdDate;
+  }
+
+  public void setCreatedDate(Date createdDate) {
+    this.createdDate = createdDate;
   }
 }

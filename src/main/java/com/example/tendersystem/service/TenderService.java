@@ -5,6 +5,7 @@ import com.example.tendersystem.repository.TenderRepository;
 import org.springframework.stereotype.Service;
 import com.example.tendersystem.utils.UserUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,15 @@ public class TenderService {
     return tenderRepository.findAll();
   }
 
+  public List<Tender> getActiveTenders() {
+    return tenderRepository.findAll().stream().filter(tender -> tender.isActive()).toList();
+  }
+
+  public List<Tender> getMyTenders() {
+    return tenderRepository.findAll().stream()
+        .filter(tender -> tender.getOwner().getId() == userUtils.getCurrentUser().getId()).toList();
+  }
+
   public Optional<Tender> getTenderById(Long id) {
     return tenderRepository.findById(id);
   }
@@ -35,6 +45,7 @@ public class TenderService {
         .max()
         .orElse(0L) + 1;
     tender.setOwner(userUtils.getCurrentUser());
+    tender.setCreatedDate(new Date());
     tender.setId(newId);
 
     return tenderRepository.save(tender);

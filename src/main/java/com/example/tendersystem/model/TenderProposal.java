@@ -1,20 +1,25 @@
 package com.example.tendersystem.model;
 
+import java.util.Date;
+
 public class TenderProposal {
   private Long id;
-  private String proposalText;
+  private String description;
   private Tender tender;
   private User proposer;
-  private Double porposalSum;
+  private Date submittedDate;
+
+  private Double price;
 
   public TenderProposal() {
   }
 
-  public TenderProposal(Long id, String proposalText, Tender tender, User proposer) {
+  public TenderProposal(Long id, String description, Tender tender, User proposer, Double price) {
     this.id = id;
-    this.proposalText = proposalText;
+    this.description = description;
     this.tender = tender;
     this.proposer = proposer;
+    this.price = price;
   }
 
   public Long getId() {
@@ -25,12 +30,12 @@ public class TenderProposal {
     this.id = id;
   }
 
-  public String getProposalText() {
-    return proposalText;
+  public String getDescription() {
+    return description;
   }
 
-  public void setProposalText(String proposalText) {
-    this.proposalText = proposalText;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public Tender getTender() {
@@ -49,11 +54,19 @@ public class TenderProposal {
     this.proposer = proposer;
   }
 
-  public Double getPorposalSum() {
-    return porposalSum;
+  public Double getPrice() {
+    return price;
   }
 
-  public void setPorposalSum(Double porposalSum) {
-    this.porposalSum = porposalSum;
+  public void setPrice(Double price) {
+    this.price = price;
+  }
+
+  public Date getSubmittedDate() {
+    return submittedDate;
+  }
+
+  public void setSubmittedDate(Date submittedDate) {
+    this.submittedDate = submittedDate;
   }
 }

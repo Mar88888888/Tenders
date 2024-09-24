@@ -96,7 +96,7 @@ form {
   background-color: #F44336;
 }
 
-.copy-link-btn {
+.copy-link-btn, .add-proposal-btn {
   background-color: #007bff;
   color: white;
   border: none;
@@ -105,19 +105,20 @@ form {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+  margin-left: 10px;
 }
 
-.copy-link-btn:hover {
+.copy-link-btn:hover, .add-proposal-btn:hover {
   background-color: #0056b3;
   color: #eaeaea;
 }
 
-.copy-link-btn:focus {
+.copy-link-btn:focus, .add-proposal-btn:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
-.copy-link-btn:active {
+.copy-link-btn:active, .add-proposal-btn:active {
   background-color: #004080;
   transform: scale(0.98);
 }
@@ -155,4 +156,29 @@ form {
     text-align: center;
     padding: 12px 0;
   }
+}
+
+.proposals-section {
+  margin-top: 20px;
+}
+
+.proposal-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 15px;
+  margin: 10px 0;
+  background-color: #f9f9f9;
+}
+
+.proposal-card h4 {
+  margin: 0 0 10px;
+}
+
+.proposal-card p {
+  margin: 5px 0;
+}
+
+.price {
+  font-size: 1.5em;
+  color: #28a745;
 }

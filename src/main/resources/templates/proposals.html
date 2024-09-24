@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>My Proposals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/navbar.css">
+  <link rel="stylesheet" type="text/css" href="/myProposals.css">
+</head>
+
+<body>
+  <div th:insert="~{fragments :: headerFragment}"></div>
+
+  <h1>My Proposals</h1>
+
+  <div class="proposals-section">
+    <div class="container" th:if="${proposals.isEmpty()}">
+      <p>No proposals found.</p>
+    </div>
+
+    <div class="container" th:each="proposal : ${proposals}">
+      <div class="proposal-card">
+        <h4 class="price" th:text="${proposal.price}">Proposal Price</h4>
+        <p>Submitted for: <a th:href="@{'/tenders/' + ${proposal.tender.id}}" th:text="${proposal.tender.title}"></a>
+        </p>
+        <p>Submitted by: <span th:text="${proposal.proposer.username}">Submitter Username</span></p>
+        <p th:text="${proposal.description}">Proposal Description</p>
+        <p>Submitted on: <span th:text="${#dates.format(proposal.submittedDate, 'yyyy-MM-dd')}">Submission Date</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
