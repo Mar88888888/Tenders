@@ -1,7 +1,8 @@
-package com.example.tendersystem.utils;
+package com.example.tendersystem.user.utils;
 
-import com.example.tendersystem.model.User;
-import com.example.tendersystem.service.UserService;
+import com.example.tendersystem.user.User;
+import com.example.tendersystem.user.UserService;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.Authentication;

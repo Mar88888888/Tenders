@@ -1,15 +1,34 @@
-package com.example.tendersystem.model;
+package com.example.tendersystem.proposal;
 
 import java.util.Date;
 
-public class TenderProposal {
-  private Long id;
-  private String description;
-  private Tender tender;
-  private User proposer;
-  private Date submittedDate;
+import com.example.tendersystem.tender.Tender;
+import com.example.tendersystem.user.User;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class TenderProposal {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+
+  private String description;
+  private Date submittedDate;
   private Double price;
+
+  @ManyToOne
+  @JoinColumn(name = "tender_id", nullable = false)
+  private Tender tender;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private User proposer;
 
   public TenderProposal() {
   }

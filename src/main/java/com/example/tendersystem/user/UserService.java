@@ -1,7 +1,4 @@
-package com.example.tendersystem.service;
-
-import com.example.tendersystem.model.User;
-import com.example.tendersystem.repository.UserRepository;
+package com.example.tendersystem.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,11 +7,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
 
-  private final UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -35,7 +34,8 @@ public class UserService {
   }
 
   public List<User> getAllUsers() {
-    return userRepository.findAll();
+    return StreamSupport.stream(userRepository.findAll().spliterator(), false)
+        .toList();
   }
 
   public Optional<User> getUserById(Long id) {
@@ -43,16 +43,10 @@ public class UserService {
   }
 
   public Optional<User> findByUsername(String name) {
-    return userRepository.findByUsername(name);
+    return getAllUsers().stream().filter(user -> user.getUsername().equals(name)).findFirst();
   }
 
   public User createUser(User user) {
-    Long newId = userRepository.findAll().stream()
-        .mapToLong(User::getId)
-        .max()
-        .orElse(0L) + 1;
-
-    user.setId(newId);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     return userRepository.save(user);
   }

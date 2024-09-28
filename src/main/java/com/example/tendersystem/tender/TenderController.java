@@ -1,18 +1,14 @@
-package com.example.tendersystem.controller;
+package com.example.tendersystem.tender;
 
-import com.example.tendersystem.model.Tender;
-import com.example.tendersystem.model.TenderProposal;
-import com.example.tendersystem.service.TenderProposalService;
-import com.example.tendersystem.service.TenderService;
+import com.example.tendersystem.proposal.TenderProposal;
+import com.example.tendersystem.proposal.TenderProposalService;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -89,7 +85,6 @@ public class TenderController {
   @DeleteMapping("/{id}")
   public String deleteTender(@PathVariable Long id) {
     tenderService.deleteTender(id);
-    tenderProposalService.deleteAllProposalsByTenderId(id);
     return "redirect:/tenders";
   }
 

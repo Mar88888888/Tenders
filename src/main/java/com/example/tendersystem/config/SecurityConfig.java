@@ -1,6 +1,6 @@
 package com.example.tendersystem.config;
 
-import com.example.tendersystem.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,10 +8,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.example.tendersystem.user.UserService;
+
 @Configuration
 public class SecurityConfig {
 
-  private final UserService userService;
+  @Autowired
+  private UserService userService;
 
   public SecurityConfig(UserService userService) {
     this.userService = userService;
@@ -21,7 +24,7 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/user/login", "/user/signup", "/*.css", "/error.html").permitAll()
+            .requestMatchers("/user/login", "/user/signup", "/*.css", "/error.html", "/h2-console/**").permitAll()
             .anyRequest().authenticated())
         .formLogin(form -> form
             .loginPage("/user/login")
@@ -35,9 +38,13 @@ public class SecurityConfig {
             .deleteCookies("JSESSIONID")
             .permitAll())
         .csrf(csrf -> csrf
-            .csrfTokenRepository(org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse()));
+            .ignoringRequestMatchers("/h2-console/**")
+            .csrfTokenRepository(org.springframework.security.web.csrf.CookieCsrfTokenRepository.withHttpOnlyFalse()))
+        .headers(headers -> headers
+            .frameOptions(frameOptions -> frameOptions.sameOrigin()));
 
     return http.build();
+
   }
 
   @Bean

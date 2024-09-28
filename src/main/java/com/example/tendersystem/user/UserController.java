@@ -1,14 +1,11 @@
-package com.example.tendersystem.controller;
+package com.example.tendersystem.user;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.example.tendersystem.model.User;
-import com.example.tendersystem.service.UserService;;
+import org.springframework.web.bind.annotation.RequestMapping;;
 
 @Controller
 @RequestMapping("/user")
@@ -33,8 +30,7 @@ public class UserController {
 
   @PostMapping("/login")
   public String loginSubmit(@ModelAttribute User user, Model model) {
-    userService.createUser(user);
-
+    userService.login(user.getUsername(), user.getPassword());
     model.addAttribute("success", "User logged in successfully!");
     return "redirect:/login";
   }
