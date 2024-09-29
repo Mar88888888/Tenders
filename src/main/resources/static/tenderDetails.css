@@ -66,7 +66,8 @@ form {
 }
 
 .toggle-btn,
-.delete-btn {
+.delete-btn,
+.accept-btn {
   background-color: #1976D2;
   color: white;
   padding: 10px 20px;
@@ -80,7 +81,8 @@ form {
 }
 
 .toggle-btn:hover,
-.delete-btn:hover {
+.delete-btn:hover,
+.accept-btn {
   transform: translateY(-3px);
 }
 
@@ -181,4 +183,53 @@ form {
 .price {
   font-size: 1.5em;
   color: #28a745;
+}
+
+/* General message styling */
+.message {
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 15px 0;
+  /* Space above and below the message */
+  font-size: 16px;
+}
+
+/* Success message styling */
+.success-message {
+  background-color: #d4edda;
+  /* Light green background */
+  color: #155724;
+  /* Dark green text */
+  border: 1px solid #c3e6cb;
+  /* Green border */
+}
+
+/* Error message styling */
+.error-message {
+  background-color: #f8d7da;
+  /* Light red background */
+  color: #721c24;
+  /* Dark red text */
+  border: 1px solid #f5c6cb;
+  /* Red border */
+}
+
+/* Optional: Add a hover effect for better UX */
+.success-message:hover,
+.error-message:hover {
+  opacity: 0.9;
+  /* Slightly darkens on hover */
+  transition: opacity 0.3s ease;
+  /* Smooth transition */
+}
+
+.accepted-proposal {
+  background-color: #e6ffed;
+  /* Light green background */
+  border: 2px solid #4caf50;
+  /* Green border */
+  font-weight: bold;
+  /* Bold text for emphasis */
+  padding: 15px;
+  margin-bottom: 15px;
 }

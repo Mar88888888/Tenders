@@ -4,12 +4,14 @@ import com.example.tendersystem.proposal.TenderProposal;
 import com.example.tendersystem.proposal.TenderProposalService;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/tenders")
@@ -108,6 +110,18 @@ public class TenderController {
       tenderProposalService.createTenderProposal(tenderProposal, tender);
     });
     return "redirect:/tenders/" + tenderId;
+  }
+
+  @PostMapping("/proposals/{proposalId}/accept")
+  public String acceptProposal(@PathVariable Long proposalId, Principal principal) {
+    Optional<TenderProposal> optionalProposal = tenderProposalService.getTenderProposalById(proposalId);
+
+    if (!optionalProposal.isPresent()) {
+      return "redirect:/tenders?error=ProposalNotFound";
+    }
+
+    TenderProposal proposal = optionalProposal.get();
+    return tenderService.acceptProposal(proposal, principal.getName());
   }
 
 }

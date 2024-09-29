@@ -51,4 +51,5 @@ public class TenderProposalService {
     return getAllTenderProposals().stream()
         .filter(tender -> tender.getTender().getId().equals(tenderId)).toList();
   }
+
 }

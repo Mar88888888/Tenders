@@ -5,6 +5,7 @@ import java.util.Date;
 import com.example.tendersystem.tender.Tender;
 import com.example.tendersystem.user.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class TenderProposal {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @Column(columnDefinition = "TEXT")
   private String description;
   private Date submittedDate;
   private Double price;
@@ -88,4 +90,5 @@ public class TenderProposal {
   public void setSubmittedDate(Date submittedDate) {
     this.submittedDate = submittedDate;
   }
+
 }

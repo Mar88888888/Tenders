@@ -10,6 +10,22 @@
 
 <body>
   <div th:insert="~{fragments :: headerFragment}"></div>
+  
+  <div th:if="${param.error}">
+    <div th:if="${param.error == 'UnauthorizedAccess'}" class="error-message">
+      You are not authorized to accept proposals for this tender.
+    </div>
+    <div th:if="${param.error == 'ProposalAlreadyAccepted'}" class="error-message">
+      A proposal has already been accepted for this tender.
+    </div>
+  </div>
+
+  <div th:if="${param.success}">
+    <div th:if="${param.success == 'ProposalAccepted'}" class="success-message">
+      The proposal has been successfully accepted.
+    </div>
+  </div>
+
   <h1>Tender Detail</h1>
   <div class="container" th:classappend="${tender.isActive ? 'active' : 'inactive'}">
     <h2 th:text="${tender.title}">Tender Title</h2>
@@ -25,13 +41,12 @@
 
     <div class="button-group">
       
-      <a th:if="${tender.isActive && tender.owner.username != principal.name}" 
+      <a th:if="${tender.isActive && tender.owner.username != principal.name && tender.acceptedProposal == null}" 
       th:href="@{'/tenders/' + ${tender.id} + '/proposals/add'}">
         <button class="add-proposal-btn">Add Proposal</button>
       </a>
       <button class="copy-link-btn" th:attr="onclick='copyLink(' + ${tender.id} + ')'">Copy Link</button>
 
-      <!-- <span > -->
         <form th:if="${principal != null && tender.owner.username == principal.name}"
         th:action="@{'/tenders' + '/toggleActive/' + ${tender.id}}" method="post">
           <button type="submit" class="toggle-btn" th:classappend="${tender.isActive ? 'deactivate-btn' : 'activate-btn'}"
@@ -45,19 +60,31 @@
           <input type="hidden" name="_method" value="delete" />
           <button type="submit" class="delete-btn">Delete</button>
         </form>
-      <!-- </span> -->
     </div>
   </div>
 
   <div class="proposals-section">
     <h1>Proposals</h1>
     <div class="container">
-      <div th:each="proposal : ${proposals}" class="proposal-card">
+      <div th:if="${tender.acceptedProposal != null}" class="proposal-card accepted-proposal">
+        <h4 class="price" th:text="${tender.acceptedProposal.price}">Accepted Proposal Price</h4>
+        <p>Submitted by: <span th:text="${tender.acceptedProposal.proposer.username}">Submitter Username</span></p>
+        <p th:text="${tender.acceptedProposal.description}">Accepted Proposal Description</p>
+        <p>Submitted on: <span th:text="${#dates.format(tender.acceptedProposal.submittedDate, 'yyyy-MM-dd')}">Submission
+            Date</span></p>
+      </div>
+  
+      <div th:each="proposal : ${proposals}"
+        th:if="${tender.acceptedProposal == null || proposal.id != tender.acceptedProposal.id}" class="proposal-card">
         <h4 class="price" th:text="${proposal.price}">Proposal Price</h4>
         <p>Submitted by: <span th:text="${proposal.proposer.username}">Submitter Username</span></p>
         <p th:text="${proposal.description}">Proposal Description</p>
-        <p>Submitted on: <span th:text="${#dates.format(proposal.submittedDate, 'yyyy-MM-dd')}">Submission Date</span>
-        </p>
+        <p>Submitted on: <span th:text="${#dates.format(proposal.submittedDate, 'yyyy-MM-dd')}">Submission Date</span></p>
+  
+        <form th:if="${principal != null && tender.owner.username == principal.name && tender.acceptedProposal == null}"
+          th:action="@{'/tenders/proposals/' + ${proposal.id} + '/accept'}" method="post">
+          <button type="submit" class="accept-btn">Accept Proposal</button>
+        </form>
       </div>
     </div>
   </div>

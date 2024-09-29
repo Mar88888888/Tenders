@@ -1,5 +1,6 @@
 package com.example.tendersystem.tender;
 
+import com.example.tendersystem.proposal.TenderProposal;
 import com.example.tendersystem.user.utils.UserUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,4 +67,18 @@ public class TenderService {
         .toList();
   }
 
+  public String acceptProposal(TenderProposal proposal, String username) {
+    Tender tender = proposal.getTender();
+
+    if (!tender.getOwner().getUsername().equals(username)) {
+      return "redirect:/tenders/" + tender.getId() + "?error=UnauthorizedAccess";
+    }
+    if (tender.getAcceptedProposal() != null) {
+      return "redirect:/tenders/" + tender.getId() + "?error=ProposalAlreadyAccepted";
+    }
+    tender.setAcceptedProposal(proposal);
+    tenderRepository.save(tender);
+
+    return "redirect:/tenders/" + tender.getId() + "?success=ProposalAccepted";
+  }
 }
