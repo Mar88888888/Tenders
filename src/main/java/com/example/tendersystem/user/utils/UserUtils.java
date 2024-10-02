@@ -5,15 +5,19 @@ import com.example.tendersystem.user.UserService;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope("prototype")
 public class UserUtils {
 
-  private final UserService userService;
+  private UserService userService;
 
-  public UserUtils(UserService userService) {
+  @Autowired
+  public void setUserService(UserService userService) {
     this.userService = userService;
   }
 

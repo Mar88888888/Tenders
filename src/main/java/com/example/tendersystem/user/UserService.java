@@ -12,14 +12,17 @@ import java.util.stream.StreamSupport;
 @Service
 public class UserService {
 
-  @Autowired
   private UserRepository userRepository;
-
-  @Autowired
   private PasswordEncoder passwordEncoder;
 
-  public UserService(UserRepository userRepository) {
+  @Autowired
+  public void setUserService(UserRepository userRepository) {
     this.userRepository = userRepository;
+  }
+
+  @Autowired
+  public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
   }
 
   public boolean login(String username, String rawPassword) {

@@ -17,10 +17,10 @@ public class TenderProposalService {
   @Autowired
   private TenderProposalRepository tenderProposalRepository;
 
+  @Autowired
   private UserUtils userUtils;
 
-  public TenderProposalService(UserUtils userUtils) {
-    this.userUtils = userUtils;
+  public TenderProposalService() {
   }
 
   public List<TenderProposal> getAllTenderProposals() {

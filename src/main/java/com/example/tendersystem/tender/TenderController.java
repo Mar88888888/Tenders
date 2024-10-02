@@ -4,7 +4,6 @@ import com.example.tendersystem.proposal.TenderProposal;
 import com.example.tendersystem.proposal.TenderProposalService;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +19,8 @@ public class TenderController {
   @Value("${app.url}")
   private String appUrl;
 
-  private final TenderService tenderService;
-  private final TenderProposalService tenderProposalService;
+  private TenderService tenderService;
+  private TenderProposalService tenderProposalService;
 
   public TenderController(TenderService tenderService, TenderProposalService tenderProposalService) {
     this.tenderService = tenderService;

@@ -19,9 +19,6 @@ public class TenderService {
   @Autowired
   private UserUtils userUtils;
 
-  public TenderService() {
-  }
-
   public List<Tender> getAllTenders() {
     return StreamSupport.stream(tenderRepository.findAll().spliterator(), false)
         .toList();
