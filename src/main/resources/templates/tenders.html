@@ -12,13 +12,11 @@
   <div th:insert="~{fragments :: headerFragment}">
   </div>
 
-  <!-- Title for the page -->
   <div class="tenders-container">
-    <h2>Active Tenders</h2>
+    <h2>Tenders</h2>
 
     <a href="/tenders/add" class="add-tender">Create Tender</a>
 
-    <!-- List of tenders -->
     <ul class="tenders-list">
       <li th:each="tender : ${tenders}" class="tender-item">
         <span class="tender-item-title" th:text="${tender.title}">Tender Title</span>

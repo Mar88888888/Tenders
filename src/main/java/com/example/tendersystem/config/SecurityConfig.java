@@ -16,8 +16,7 @@ public class SecurityConfig {
   @Autowired
   private UserService userService;
 
-  public SecurityConfig(UserService userService) {
-    this.userService = userService;
+  public SecurityConfig() {
   }
 
   @Bean

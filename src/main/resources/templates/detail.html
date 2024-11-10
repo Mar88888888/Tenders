@@ -29,13 +29,15 @@
   <h1>Tender Detail</h1>
   <div class="container" th:classappend="${tender.isActive ? 'active' : 'inactive'}">
     <h2 th:text="${tender.title}">Tender Title</h2>
+    <h4 class="price" th:text="${tender.expectedPrice + '$'}">Expected Price</h4>
+
     <p>Owner: <span th:text="${tender.owner.username}">Tender Owner</span></p>
     <p th:text="${tender.description}">Tender Description</p>
     <p>Keywords:
       <br>
       <span th:each="keyword, iterStat : ${tender.keywords}">
         <span th:text="${keyword}">Keyword</span>
-        <span th:if="${!iterStat.last}">, </span>
+        <span th:unless="${iterStat.last}">, </span>
       </span>
     </p>
 
@@ -64,31 +66,42 @@
   </div>
 
   <div class="proposals-section">
-    <h1>Proposals</h1>
-    <div class="container">
-      <div th:if="${tender.acceptedProposal != null}" class="proposal-card accepted-proposal">
-        <h4 class="price" th:text="${tender.acceptedProposal.price}">Accepted Proposal Price</h4>
-        <p>Submitted by: <span th:text="${tender.acceptedProposal.proposer.username}">Submitter Username</span></p>
-        <p th:text="${tender.acceptedProposal.description}">Accepted Proposal Description</p>
-        <p>Submitted on: <span th:text="${#dates.format(tender.acceptedProposal.submittedDate, 'yyyy-MM-dd')}">Submission
-            Date</span></p>
+
+    <div th:switch="${#lists.size(proposals)}">
+      <div th:case="0">
+        <h1 >No proposals</h1> 
+
       </div>
-  
-      <div th:each="proposal : ${proposals}"
-        th:if="${tender.acceptedProposal == null || proposal.id != tender.acceptedProposal.id}" class="proposal-card">
-        <h4 class="price" th:text="${proposal.price}">Proposal Price</h4>
-        <p>Submitted by: <span th:text="${proposal.proposer.username}">Submitter Username</span></p>
-        <p th:text="${proposal.description}">Proposal Description</p>
-        <p>Submitted on: <span th:text="${#dates.format(proposal.submittedDate, 'yyyy-MM-dd')}">Submission Date</span></p>
-  
-        <form th:if="${principal != null && tender.owner.username == principal.name && tender.acceptedProposal == null}"
-          th:action="@{'/tenders/proposals/' + ${proposal.id} + '/accept'}" method="post">
-          <button type="submit" class="accept-btn">Accept Proposal</button>
-        </form>
+      <div th:case="*">
+
+        <h1 th:case="*">Proposals</h1>
+        
+        <div class="container">
+          <div th:if="${tender.acceptedProposal != null}" class="proposal-card accepted-proposal">
+            <h4 class="price" th:text="${tender.acceptedProposal.price}">Accepted Proposal Price</h4>
+            <p>Submitted by: <span th:text="${tender.acceptedProposal.proposer.username}">Submitter Username</span></p>
+            <p th:text="${tender.acceptedProposal.description}">Accepted Proposal Description</p>
+            <p>Submitted on: <span th:text="${#dates.format(tender.acceptedProposal.submittedDate, 'yyyy-MM-dd')}">Submission
+              Date</span></p>
+            </div>
+            
+            <div th:each="proposal : ${proposals}"
+            th:if="${tender.acceptedProposal == null || proposal.id != tender.acceptedProposal.id}" class="proposal-card">
+            <h4 class="price" th:text="${proposal.price}">Proposal Price</h4>
+            <p>Submitted by: <span th:text="${proposal.proposer.username}">Submitter Username</span></p>
+            <p th:text="${proposal.description}">Proposal Description</p>
+            <p>Submitted on: <span th:text="${#dates.format(proposal.submittedDate, 'yyyy-MM-dd')}">Submission Date</span></p>
+            
+            <form th:if="${principal != null && tender.owner.username == principal.name && tender.acceptedProposal == null}"
+            th:action="@{'/tenders/proposals/' + ${proposal.id} + '/accept'}" method="post">
+            <button type="submit" class="accept-btn">Accept Proposal</button>
+          </form>
+        </div>
+      </div>
       </div>
     </div>
   </div>
-
+  
   <script>
     function copyLink(tenderId) {
       const appUrl = '[[${appUrl}]]';

@@ -29,7 +29,7 @@ public class Tender {
   @Column(columnDefinition = "TEXT")
   private String description;
   private Date createdDate;
-  private Double expectedValue;
+  private Double expectedPrice;
 
   @Column(nullable = false, columnDefinition = "boolean default false")
   private boolean isActive;
@@ -108,12 +108,12 @@ public class Tender {
     this.keywords = keywords;
   }
 
-  public Double getExpectedValue() {
-    return expectedValue;
+  public Double getExpectedPrice() {
+    return expectedPrice;
   }
 
-  public void setExpectedValue(Double expectedValue) {
-    this.expectedValue = expectedValue;
+  public void setExpectedPrice(Double expectedValue) {
+    this.expectedPrice = expectedValue;
   }
 
   public Date getCreatedDate() {

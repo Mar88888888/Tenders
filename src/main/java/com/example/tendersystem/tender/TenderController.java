@@ -74,7 +74,7 @@ public class TenderController {
   @PostMapping
   public String createTender(@ModelAttribute Tender tender) {
     tenderService.createTender(tender);
-    return "redirect:/tenders";
+    return "redirect:/tenders/active";
   }
 
   @PostMapping("/toggleActive/{id}")
@@ -86,7 +86,7 @@ public class TenderController {
   @DeleteMapping("/{id}")
   public String deleteTender(@PathVariable Long id) {
     tenderService.deleteTender(id);
-    return "redirect:/tenders";
+    return "redirect:/tenders/active";
   }
 
   @GetMapping("/search")
@@ -116,7 +116,7 @@ public class TenderController {
     Optional<TenderProposal> optionalProposal = tenderProposalService.getTenderProposalById(proposalId);
 
     if (!optionalProposal.isPresent()) {
-      return "redirect:/tenders?error=ProposalNotFound";
+      return "redirect:/tenders/active?error=ProposalNotFound";
     }
 
     TenderProposal proposal = optionalProposal.get();
