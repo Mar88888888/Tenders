@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/tenders")
@@ -39,13 +38,6 @@ public class TenderController {
     List<Tender> tenders = tenderService.getActiveTenders();
     model.addAttribute("tenders", tenders);
     return "tenders.html";
-  }
-
-  @GetMapping("/proposals/my")
-  public String getMyProposals(Model model) {
-    List<TenderProposal> proposals = tenderProposalService.getMyProposals();
-    model.addAttribute("proposals", proposals);
-    return "proposals.html";
   }
 
   @GetMapping("/my")
@@ -109,18 +101,6 @@ public class TenderController {
       tenderProposalService.createTenderProposal(tenderProposal, tender);
     });
     return "redirect:/tenders/" + tenderId;
-  }
-
-  @PostMapping("/proposals/{proposalId}/accept")
-  public String acceptProposal(@PathVariable Long proposalId, Principal principal) {
-    Optional<TenderProposal> optionalProposal = tenderProposalService.getTenderProposalById(proposalId);
-
-    if (!optionalProposal.isPresent()) {
-      return "redirect:/tenders/active?error=ProposalNotFound";
-    }
-
-    TenderProposal proposal = optionalProposal.get();
-    return tenderService.acceptProposal(proposal, principal.getName());
   }
 
 }

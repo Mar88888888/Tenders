@@ -93,7 +93,7 @@
             <p>Submitted on: <span th:text="${#dates.format(proposal.submittedDate, 'yyyy-MM-dd')}">Submission Date</span></p>
             
             <form th:if="${principal != null && tender.owner.username == principal.name && tender.acceptedProposal == null}"
-            th:action="@{'/tenders/proposals/' + ${proposal.id} + '/accept'}" method="post">
+            th:action="@{'/tenders/proposals/' + ${proposal.id} + '/status'}" method="post">
             <button type="submit" class="accept-btn">Accept Proposal</button>
           </form>
         </div>
