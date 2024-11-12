@@ -2,8 +2,6 @@ package com.example.tendersystem.user;
 
 import org.springframework.stereotype.Service;
 
-import com.example.tendersystem.tender.Tender;
-import com.example.tendersystem.tender.dto.TenderResponseDto;
 import com.example.tendersystem.user.dto.CreateUserDto;
 import com.example.tendersystem.user.dto.UserResponseDto;
 

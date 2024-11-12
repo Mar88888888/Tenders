@@ -53,7 +53,7 @@ public class TenderProposalController {
       @ApiResponse(responseCode = "404", description = "Proposal not found", content = @Content),
       @ApiResponse(responseCode = "409", description = "Proposal cannot be accepted due to conflict", content = @Content)
   })
-  @PutMapping("/{proposalId}/status")
+  @PatchMapping("/{proposalId}/status")
   public ResponseEntity<ProposalResponseDto> acceptProposal(
       @Parameter(description = "ID of the proposal to accept") @PathVariable Long proposalId) {
     Optional<TenderProposal> optionalProposal = tenderProposalService.getTenderProposalById(proposalId);
