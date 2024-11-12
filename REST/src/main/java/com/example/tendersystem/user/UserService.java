@@ -2,11 +2,15 @@ package com.example.tendersystem.user;
 
 import org.springframework.stereotype.Service;
 
+import com.example.tendersystem.tender.Tender;
+import com.example.tendersystem.tender.dto.TenderResponseDto;
+import com.example.tendersystem.user.dto.CreateUserDto;
 import com.example.tendersystem.user.dto.UserResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -17,7 +21,15 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public User createUser(User user) {
+  public User createUser(CreateUserDto userDto) {
+    if (this.findByUsername(userDto.getUsername()).isPresent()) {
+      throw new IllegalArgumentException("Username is already taken.");
+    }
+
+    User user = new User();
+    user.setUsername(userDto.getUsername());
+    user.setPassword(userDto.getPassword());
+
     return userRepository.save(user);
   }
 
@@ -60,4 +72,9 @@ public class UserService {
     return dto;
   }
 
+  public List<UserResponseDto> convertToDtoList(List<User> users) {
+    return users.stream()
+        .map(this::convertToDto)
+        .collect(Collectors.toList());
+  }
 }
