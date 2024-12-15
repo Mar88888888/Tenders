@@ -1,11 +1,10 @@
 package com.example.tendersystem.user;
 
-import org.springframework.stereotype.Service;
-
+import com.example.tendersystem.interfaces.user.UserDao;
 import com.example.tendersystem.user.dto.CreateUserDto;
 import com.example.tendersystem.user.dto.UserResponseDto;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -13,60 +12,70 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-  private final UserRepository userRepository;
+  private final UserDao userDao;
 
-  public UserService(UserRepository userRepository) {
-    this.userRepository = userRepository;
+  public UserService(UserDao userDao) {
+    this.userDao = userDao;
   }
 
   public User createUser(CreateUserDto userDto) {
-    if (this.findByUsername(userDto.getUsername()).isPresent()) {
+    User existingUser = userDao.findByUsername(userDto.getUsername());
+    if (existingUser != null) {
       throw new IllegalArgumentException("Username is already taken.");
+    }
+
+    User existingEmail = userDao.findByEmail(userDto.getEmail());
+    if (existingEmail != null) {
+      throw new IllegalArgumentException("Email is already taken.");
     }
 
     User user = new User();
     user.setUsername(userDto.getUsername());
     user.setPassword(userDto.getPassword());
+    user.setEmail(userDto.getEmail());
 
-    return userRepository.save(user);
+    user.setId(userDao.create(user));
+    return user;
   }
 
   public List<User> getAllUsers() {
-    List<User> users = new ArrayList<>();
-    userRepository.findAll().forEach(users::add);
-    return users;
+    return userDao.findAll();
   }
 
   public Optional<User> getUserById(Long id) {
-    return userRepository.findById(id);
+    return userDao.read(id);
   }
 
   public User updateUser(Long id, User updatedUser) {
-    if (!userRepository.existsById(id)) {
+    Optional<User> existingUser = getUserById(id);
+    if (existingUser.isEmpty()) {
       throw new IllegalArgumentException("User not found");
     }
+
     updatedUser.setId(id);
-    return userRepository.save(updatedUser);
+    userDao.update(updatedUser);
+    return updatedUser;
   }
 
   public void deleteUser(Long id) {
-    if (!userRepository.existsById(id)) {
-      throw new IllegalArgumentException("User not found");
-    }
-    userRepository.deleteById(id);
+    userDao.delete(id);
   }
 
   public Optional<User> findByUsername(String username) {
-    List<User> users = getAllUsers();
-    return users.stream()
-        .filter(user -> user.getUsername().equals(username))
-        .findFirst();
+    User user = userDao.findByUsername(username);
+    return Optional.ofNullable(user);
+  }
+
+  public Optional<User> findByEmail(String email) {
+    User user = userDao.findByEmail(email);
+    return Optional.ofNullable(user);
   }
 
   public UserResponseDto convertToDto(User user) {
     UserResponseDto dto = new UserResponseDto();
     dto.setId(user.getId());
     dto.setUsername(user.getUsername());
+    dto.setEmail(user.getEmail());
     return dto;
   }
 

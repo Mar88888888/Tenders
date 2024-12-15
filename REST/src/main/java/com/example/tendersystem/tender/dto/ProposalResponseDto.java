@@ -1,11 +1,14 @@
 package com.example.tendersystem.tender.dto;
 
+import com.example.tendersystem.proposal.ProposalStatus;
+
 public class ProposalResponseDto {
   private Long id;
   private String description;
   private Double price;
   private Long proposerId;
   private Long tenderId;
+  private ProposalStatus status = ProposalStatus.PENDING;
 
   public Long getId() {
     return id;
@@ -45,6 +48,14 @@ public class ProposalResponseDto {
 
   public void setTenderId(Long tenderId) {
     this.tenderId = tenderId;
+  }
+
+  public ProposalStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(ProposalStatus status) {
+    this.status = status;
   }
 
 }

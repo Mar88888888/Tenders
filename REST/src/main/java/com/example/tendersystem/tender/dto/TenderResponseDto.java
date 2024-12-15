@@ -1,5 +1,6 @@
 package com.example.tendersystem.tender.dto;
 
+import java.util.Date;
 import java.util.List;
 
 public class TenderResponseDto {
@@ -11,6 +12,7 @@ public class TenderResponseDto {
   private Long ownerId;
   private Long acceptedProposalId;
   private List<String> keywords;
+  private Date createdDate;
 
   public Long getId() {
     return id;
@@ -83,4 +85,14 @@ public class TenderResponseDto {
     this.keywords = keywords;
     return this;
   }
+
+  public Date getCreatedDate() {
+    return createdDate;
+  }
+
+  public TenderResponseDto setCreatedDate(Date createdDate) {
+    this.createdDate = createdDate;
+    return this;
+  }
+
 }

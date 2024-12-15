@@ -1,61 +1,54 @@
 package com.example.tendersystem.tender;
 
-import com.example.tendersystem.proposal.TenderProposal;
+import com.example.tendersystem.interfaces.proposal.ProposalDao;
+import com.example.tendersystem.interfaces.tender.TenderDao;
+import com.example.tendersystem.proposal.Proposal;
+import com.example.tendersystem.proposal.ProposalStatus;
 import com.example.tendersystem.tender.dto.CreateTenderDto;
 import com.example.tendersystem.tender.dto.TenderResponseDto;
 import com.example.tendersystem.user.UserService;
 import com.example.tendersystem.user.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class TenderService {
 
   @Autowired
-  private TenderRepository tenderRepository;
+  private TenderDao tenderDao;
+  @Autowired
+  private ProposalDao proposalDao;
   @Autowired
   private UserService userService;
 
   public List<Tender> getAllTenders() {
-    return StreamSupport.stream(tenderRepository.findAll().spliterator(), false)
-        .toList();
-  }
-
-  public List<Tender> getFilteredTenders(LocalDate date, Double minSum, Double maxSum, int page, int size) {
-    Pageable pageable = PageRequest.of(page, size);
-
-    Page<Tender> tenderPage;
-    if (date != null || minSum != null || maxSum != null) {
-      tenderPage = tenderRepository.findByDateAndSumRange(date, minSum, maxSum, pageable);
-    } else {
-      tenderPage = tenderRepository.findAll(pageable);
-    }
-    return tenderPage.getContent();
+    return tenderDao.findActiveTenders();
   }
 
   public List<Tender> getActiveTenders() {
-    return getAllTenders().stream()
-        .filter(Tender::isActive).toList();
+    return tenderDao.findActiveTenders();
   }
 
-  public List<Tender> getMyTenders(Long id) {
-    return getAllTenders().stream()
-        .filter(tender -> tender.getOwner().getId().equals(id)).toList();
+  public List<Tender> getFilteredTenders(LocalDate date, Double minSum, Double maxSum, int page, int size) {
+    int offset = Math.max(page - 1, 0) * size;
+    return tenderDao.findFilteredTenders(date, minSum, maxSum, offset, size);
+  }
+
+  public List<Tender> getUserTenders(Long id) {
+    return tenderDao.findByOwner(id);
   }
 
   public Optional<Tender> getTenderById(Long id) {
-    return tenderRepository.findById(id);
+    return tenderDao.read(id);
   }
 
   public Tender createTender(CreateTenderDto createTenderDto) {
@@ -72,53 +65,71 @@ public class TenderService {
     tender.setDescription(createTenderDto.getDescription());
     tender.setExpectedPrice(createTenderDto.getExpectedPrice());
     tender.setKeywords(createTenderDto.getKeywords());
-    tender.setOwner(owner);
+    tender.setOwnerId(owner.getId());
     tender.setActive(false);
     tender.setCreatedDate(new Date());
-    return tenderRepository.save(tender);
+
+    Long tenderId = tenderDao.create(tender);
+    tender.setId(tenderId);
+    return tender;
   }
 
   public boolean updateTenderStatus(Long tenderId, boolean newStatus) {
-    Optional<Tender> tenderOptional = tenderRepository.findById(tenderId);
+    Optional<Tender> optionalTender = tenderDao.read(tenderId);
 
-    if (tenderOptional.isEmpty()) {
-      throw new IllegalArgumentException("Tender with ID " + tenderId + " not found");
-    }
+    Tender tender = optionalTender
+        .orElseThrow(() -> new IllegalArgumentException("Tender with ID " + tenderId + " not found"));
 
-    if (tenderOptional.isPresent()) {
-      Tender tender = tenderOptional.get();
-      if (tender.isActive() != newStatus) {
-        tender.setActive(newStatus);
-        tenderRepository.save(tender);
-        return true;
-      }
+    if (tender.isActive() != newStatus) {
+      tender.setActive(newStatus);
+      tenderDao.update(tender);
+      return true;
     }
 
     return false;
   }
 
   public void deleteTender(Long id) {
-    tenderRepository.deleteById(id);
+    tenderDao.delete(id);
   }
 
   public List<Tender> searchTenders(String lowerKeyword) {
-    return getAllTenders().stream()
-        .filter(tender -> tender.getTitle().toLowerCase().contains(lowerKeyword) ||
-            tender.getDescription().toLowerCase().contains(lowerKeyword) ||
-            tender.getKeywords().stream()
-                .anyMatch(k -> k.toLowerCase().contains(lowerKeyword)))
-        .toList();
+    List<String> keywords = Arrays.asList(lowerKeyword.split("\\s+"));
+    return tenderDao.findByKeywords(keywords);
   }
 
-  public boolean acceptProposal(TenderProposal proposal) {
-    Tender tender = proposal.getTender();
+  @Transactional()
+  public boolean acceptProposal(Proposal proposal) throws Exception {
+    Optional<Tender> optionalTender = tenderDao.read(proposal.getTenderId());
 
-    if (tender.getAcceptedProposal() != null) {
-      return false;
+    Tender tender = optionalTender
+        .orElseThrow(() -> new IllegalArgumentException("Tender with ID " + proposal.getTenderId() + " not found"));
+
+    tender.setActive(false);
+
+    if (tender.getAcceptedProposalId() != null) {
+      throw new IllegalStateException("Tender with ID " + proposal.getTenderId() + " already has an accepted proposal");
     }
 
-    tender.setAcceptedProposal(proposal);
-    tenderRepository.save(tender);
+    tender.setAcceptedProposalId(proposal.getId());
+    tenderDao.update(tender);
+
+    proposal.setStatus(ProposalStatus.ACCEPTED);
+    proposalDao.update(proposal);
+
+    // if (true) {
+    // throw new RuntimeException("Simulated exception for rollback");
+    // }
+
+    List<Proposal> proposals = proposalDao.findByTender(proposal.getTenderId());
+
+    for (Proposal p : proposals) {
+      if (!p.getId().equals(proposal.getId())) {
+        p.setStatus(ProposalStatus.REJECTED);
+        proposalDao.update(p);
+      }
+    }
+
     return true;
   }
 
@@ -129,8 +140,9 @@ public class TenderService {
         .setDescription(tender.getDescription())
         .setExpectedPrice(tender.getExpectedPrice())
         .setActive(tender.isActive())
-        .setOwnerId(tender.getOwner().getId())
-        .setAcceptedProposalId(tender.getAcceptedProposal() == null ? null : tender.getAcceptedProposal().getId())
+        .setCreatedDate(tender.getCreatedDate())
+        .setOwnerId(tender.getOwnerId())
+        .setAcceptedProposalId(tender.getAcceptedProposalId() == null ? null : tender.getAcceptedProposalId())
         .setKeywords(tender.getKeywords());
     return dto;
   }
